@@ -12,9 +12,7 @@ on:
 
 env:
   IMAGE_NAME: asia-northeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/coo-chan-daily-log/coo-chan-daily-log-app
-  WORKLOAD_IDENTITY_PROVIDER: projects/${{ secrets.GCP_PROJECT_ID }}/locations/global/workloadIdentityPools/prod-pool/providers/github
   PORT: 8080
-  SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
 
 permissions:
   id-token: write
@@ -25,25 +23,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@v2
       - id: auth
-        name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCLOUD_AUTH }}
-
-      - name: Set up Cloud SDK
+      - name: Setup Google Cloud
         uses: google-github-actions/setup-gcloud@v2
         with:
           service_account_key: ${{ secrets.GCLOUD_AUTH }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-
       - name: Configure Docker
-        run: gcloud auth configure-docker --quiet asia-northeast2-docker.pkg.dev
-
+        run: gcloud auth configure-docker asia-northeast2-docker.pkg.dev
       - name: Build Docker image
         run: docker build --platform linux/amd64 -t ${{ env.IMAGE_NAME }}:latest -f Dockerfile .
-
       - name: Push Docker image
-        run: docker push ${{ env.IMAGE_NAME }}
+        run: docker push ${{ env.IMAGE_NAME }}:latest
