@@ -14,6 +14,7 @@ env:
   IMAGE_NAME: asia-northeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_NUMBER }}/coo-chan-daily-log/coo-chan-daily-log-app
   WORKLOAD_IDENTITY_PROVIDER: projects/${{ secrets.GCP_PROJECT_ID }}/locations/global/workloadIdentityPools/prod-pool/providers/github
   PORT: 8080
+  SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
 
 permissions:
   id-token: write
