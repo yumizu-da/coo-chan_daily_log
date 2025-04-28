@@ -1,0 +1,42 @@
+name: Deploy Coo chan daily log
+
+# mainブランチをpushする度にdeployする場合
+# on:
+#   push:
+#     branches:
+#       - main
+
+# 手動トリガーでdeployする場合
+on:
+  workflow_dispatch:
+
+env:
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  APP_IMAGE_NAME: asia-northeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/coo-chan-daily-log/coo-chan-daily-log-app
+  PORT: 8080
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  Build-and-Push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet asia-northeast2-docker.pkg.dev
+      - name: Build Docker image
+        run: docker build --platform linux/amd64 -t ${{ env.IMAGE_NAME }}:latest -f Dockerfile .
+      - name: Push Docker image
+        run: docker push ${{ env.APP_IMAGE_NAME }}:latest
