@@ -12,7 +12,7 @@ on:
 
 env:
   IMAGE_NAME: asia-northeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/coo-chan-daily-log/coo-chan-daily-log-app
-  WORKLOAD_IDENTITY_PROVIDER: projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/prod-pool/providers/github
+  WORKLOAD_IDENTITY_PROVIDER: projects/'${{ secrets.GCP_PROJECT_NUMBER }}'/locations/global/workloadIdentityPools/prod-pool/providers/github
   PORT: 8080
 
 permissions:
