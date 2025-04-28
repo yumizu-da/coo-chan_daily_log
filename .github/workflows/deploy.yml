@@ -41,3 +41,34 @@ jobs:
         run: docker build --platform linux/amd64 -t ${{ env.IMAGE_NAME }}:latest -f Dockerfile .
       - name: Push Docker image
         run: docker push ${{ env.IMAGE_NAME }}:latest
+
+  Deploy-App:
+    needs: Build-and-Push-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+      - name: Setup Google Cloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Deploy Cloud Run for Demo App
+        run: |
+          gcloud run deploy coo-chan-daily-log-app \
+          --image ${{ env.IMAGE_NAME }}:latest \
+          --region=asia-northeast2 \
+          --platform managed \
+          --min-instances=0 \
+          --max-instances=1 \
+          --no-cpu-throttling  \
+          --cpu=1 \
+          --concurrency=10 \
+          --memory=512Mi \
+          --quiet \
+          --port ${{ env.PORT }} \
+          --service-account=${{ env.SERVICE_ACCOUNT }}
