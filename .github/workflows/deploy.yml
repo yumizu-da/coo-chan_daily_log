@@ -71,4 +71,4 @@ jobs:
           --memory=512Mi \
           --quiet \
           --port ${{ env.PORT }} \
-          --service-account=${{ env.SERVICE_ACCOUNT }}
+          --service-account=${{ secrets.SERVICE_ACCOUNT }}
