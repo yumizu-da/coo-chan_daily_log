@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  APP_IMAGE_NAME: asia-northeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/coo-chan-daily-log/coo-chan-daily-log-app
+  IMAGE_NAME: asia-northeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/coo-chan-daily-log/coo-chan-daily-log-app
   WORKLOAD_IDENTITY_PROVIDER: projects/${{ secrets.GCP_PROJECT_ID }}/locations/global/workloadIdentityPools/prod-pool/providers/github
   PORT: 8080
 
@@ -39,4 +39,4 @@ jobs:
       - name: Build Docker image
         run: docker build --platform linux/amd64 -t ${{ env.IMAGE_NAME }}:latest -f Dockerfile .
       - name: Push Docker image
-        run: docker push ${{ env.APP_IMAGE_NAME }}
+        run: docker push ${{ env.APP_IMAGE_NAME }}:latest
