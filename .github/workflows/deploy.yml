@@ -12,6 +12,7 @@ on:
 
 env:
   IMAGE_NAME: asia-northeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/coo-chan-daily-log/coo-chan-daily-log-app
+  WORKLOAD_IDENTITY_PROVIDER: projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/prod-pool/providers/github
   PORT: 8080
 
 permissions:
@@ -25,13 +26,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - id: auth
+        name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCLOUD_AUTH }}
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
       - name: Setup Google Cloud
         uses: google-github-actions/setup-gcloud@v2
         with:
-          service_account_key: ${{ secrets.GCLOUD_AUTH }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
       - name: Configure Docker
         run: gcloud auth configure-docker asia-northeast2-docker.pkg.dev
