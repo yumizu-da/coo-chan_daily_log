@@ -7,7 +7,6 @@ from google.cloud.firestore import Client as FirestoreClient
 from config import settings
 
 
-@st.cache_resource
 def load_weight_log() -> pl.DataFrame:
     """Firestoreから体重ログを取得する
 
