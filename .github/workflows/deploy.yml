@@ -72,3 +72,5 @@ jobs:
           --quiet \
           --port ${{ env.PORT }} \
           --service-account=${{ secrets.SERVICE_ACCOUNT }}
+          --update-secrets="\
+            PROJECT_ID = ${{ secrets.GCP_PROJECT_ID }}
