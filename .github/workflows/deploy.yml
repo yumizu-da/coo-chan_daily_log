@@ -72,4 +72,4 @@ jobs:
           --quiet \
           --port ${{ env.PORT }} \
           --service-account=${{ secrets.SERVICE_ACCOUNT }} \
-          --set-env-vars "PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
+          --set-env-vars "PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}"
