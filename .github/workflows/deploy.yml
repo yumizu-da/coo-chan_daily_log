@@ -59,7 +59,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
       - name: Deploy Cloud Run for Demo App
         run: |
-          gcloud beta run deploy coo-chan-daily-log-app \
+          gcloud run deploy coo-chan-daily-log-app \
           --image ${{ env.IMAGE_NAME }}:latest \
           --region=asia-northeast2 \
           --platform managed \
@@ -71,6 +71,6 @@ jobs:
           --memory=512Mi \
           --quiet \
           --port ${{ env.PORT }} \
-          --service-account=${{ secrets.SERVICE_ACCOUNT }}
+          --service-account=${{ secrets.SERVICE_ACCOUNT }} \
           --update-secrets="\
             PROJECT_ID = ${{ secrets.GCP_PROJECT_ID }}
