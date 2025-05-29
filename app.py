@@ -7,7 +7,6 @@ from google.cloud.firestore import Client as FirestoreClient
 from config import settings
 
 
-@st.cache_resource
 def load_weight_log() -> pl.DataFrame:
     """Firestoreから体重ログを取得する
 
@@ -44,6 +43,8 @@ if __name__ == "__main__":
     st.set_page_config(page_title="毎日くうちゃん")
     st.title("毎日くうちゃん")
 
+    st.session_state["weight_log_df"] = load_weight_log()
+
     # input form
     with st.container(border=True):
         cols = st.columns(4)
@@ -60,11 +61,10 @@ if __name__ == "__main__":
         if submit:
             save_weight_log(date, weight, intake, message)
             st.toast("保存しました", icon="🎉")
+            st.session_state["weight_log_df"] = load_weight_log()
 
-    # draw line chart
-    weight_log_df = load_weight_log()
     st.line_chart(
-        data=weight_log_df,
+        data=st.session_state["weight_log_df"],
         x="date",
         y=["weight", "intake"],
         x_label="日付",
